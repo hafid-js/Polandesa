@@ -1,5 +1,7 @@
 PODS:
   - BranchSDK (3.13.3)
+  - connectivity_plus (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_branch_sdk (9.0.0):
     - BranchSDK (~> 3.13.0)
@@ -76,6 +78,7 @@ PODS:
     - StripeCore (= 25.6.2)
 
 DEPENDENCIES:
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_branch_sdk (from `.symlinks/plugins/flutter_branch_sdk/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -98,6 +101,8 @@ SPEC REPOS:
     - StripeUICore
 
 EXTERNAL SOURCES:
+  connectivity_plus:
+    :path: ".symlinks/plugins/connectivity_plus/ios"
   Flutter:
     :path: Flutter
   flutter_branch_sdk:
@@ -115,6 +120,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BranchSDK: 19a6e97115350db916a57823c7f6ed96d1e70e46
+  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_branch_sdk: 832f8173c0194f52da2ccdce500bb0c562357838
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
