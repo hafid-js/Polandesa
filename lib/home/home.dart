@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:polandesa/common/style/padding.dart';
-import 'package:polandesa/common/widgets/button/elevated_button.dart';
+import 'package:polandesa/common/widgets/custom_shapes/rounded_container.dart';
 import 'package:polandesa/common/widgets/images/circular_image.dart';
+import 'package:polandesa/common/widgets/images/rounded_image.dart';
 import 'package:polandesa/common/widgets/primary_header_container.dart';
 import 'package:polandesa/common/widgets/search_bar.dart';
+import 'package:polandesa/common/widgets/texts/section_heading.dart';
+import 'package:polandesa/home/complaint/complaint.dart';
 import 'package:polandesa/home/widgets/home_app_bar.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import 'package:polandesa/utils/constants/helpers/hex_color.dart';
@@ -108,34 +112,57 @@ class HomeScreen extends StatelessWidget {
               child: GridView.count(
                 crossAxisCount: 4,
                 crossAxisSpacing: 12,
-                mainAxisSpacing: 30,
+                mainAxisSpacing: 20,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
+                childAspectRatio: 0.9,
                 children: menuItems
                     .map(
-                      (item) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(item["image"]!, width: 50, height: 50),
-                          SizedBox(
-                            width: 60,
-                            child: Text(
-                              item["name"]!,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                      (item) => GestureDetector(
+                        onTap: () {
+                          if (item['name'] == 'Aduan') {
+                            Get.to(() => AduanScreen());
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(item['name']!),
+                                content: Text(
+                                  "Ini adalah dialog untuk menu ${item['name']}",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text("Tutup"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(item["image"]!, width: 50, height: 50),
+                            SizedBox(
+                              width: 60,
+                              child: Text(
+                                item["name"]!,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     )
                     .toList(),
               ),
             ),
-
-            SizedBox(height: USizes.spaceBtwSections),
+            SizedBox(height: 4),
             Padding(
               padding: UPadding.screenPadding,
               child: Card(
@@ -155,8 +182,8 @@ class HomeScreen extends StatelessWidget {
                     ),
 
                     Positioned(
-                      right: -20,
-                      bottom: 0,
+                      right: 0,
+                      bottom: 12,
                       child: Image.asset(
                         "assets/icons/mobil.png",
                         height: 160,
@@ -268,6 +295,210 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
+              child: Column(
+                children: [
+                  USectionHeading(
+                    title: "Beasiswa Santri dan Pengasuh",
+                    buttonTitle: '',
+                  ),
+                  URoundedImage(
+                    imageUrl: "assets/images/banners/banner-4.png",
+                    isNetworkImage: false,
+                  ),
+                  SizedBox(height: 10),
+                  USectionHeading(
+                    title: "Agenda Hari Ini",
+                    buttonTitle: "Lihat Semua",
+                  ),
+                ],
+              ),
+            ),
+
+            URoundedContainer(
+              padding: const EdgeInsets.only(left: 15, top: 5),
+              backgroundColor: UColors.light,
+              child: SizedBox(
+                height: 170,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 2,
+                  separatorBuilder: (_, __) => SizedBox(width: 16),
+                  itemBuilder: (context, index) {
+                    final articles = [
+                      {
+                        "image": "assets/images/agenda/agenda-1.jpg",
+                        "title": "Monitoring Dana Desa Gunung Condong",
+                        "date": "23-24 Februari 2026",
+                      },
+                      {
+                        "image": "assets/images/agenda/agenda-2.jpg",
+                        "title":
+                            "Penyaluran Bantuan Perhutani Untuk Keluarga Miskin",
+                        "date": "13 Februari - 1 Maret 2026",
+                      },
+                    ];
+
+                    final item = articles[index];
+
+                    return SizedBox(
+                      width: 165,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          URoundedImage(
+                            imageUrl: item["image"]!,
+                            isNetworkImage: false,
+                            height: 100,
+                            width: 165,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            item["title"]!,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            item["date"]!,
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
+              child: Column(
+                children: [
+                  USectionHeading(
+                    title: "Artikel Terbaru",
+                    buttonTitle: "Lihat Semua",
+                  ),
+                ],
+              ),
+            ),
+
+            URoundedContainer(
+              padding: const EdgeInsets.only(left: 15, top: 5),
+              backgroundColor: UColors.light,
+              child: SizedBox(
+                height: 170,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 3,
+                  separatorBuilder: (_, __) => SizedBox(width: 16),
+                  itemBuilder: (context, index) {
+                    final articles = [
+                      {
+                        "image": "assets/images/artikel/artikel-1.png",
+                        "title": "Grebeg Ingkung di Desa Gunung Condong",
+                        "date": "24 Februari 2026",
+                      },
+                      {
+                        "image": "assets/images/artikel/artikel-2.jpg",
+                        "title":
+                            "Sosialisasi Kekosongan Perangkat Desa Plipiran",
+                        "date": "19 Februari 2026",
+                      },
+                      {
+                        "image": "assets/images/artikel/artikel-3.jpg",
+                        "title":
+                            "Peningkatan Kapasitas Perangkat Desa Se- Kecamatan Bruno",
+                        "date": "17 Februari 2026",
+                      },
+                    ];
+
+                    final item = articles[index];
+
+                    return SizedBox(
+                      width: 165,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          URoundedImage(
+                            imageUrl: item["image"]!,
+                            isNetworkImage: false,
+                            height: 100,
+                            width: 165,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            item["title"]!,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            item["date"]!,
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            SizedBox(height: USizes.spaceBtwSections),
+
+            Container(
+              color: const Color.fromARGB(176, 238, 238, 238),
+              height: 115,
+              width: MediaQuery.of(context).size.width,
+
+              child: Padding(
+                padding: const EdgeInsetsGeometry.symmetric(
+                  horizontal: 25,
+                  vertical: 15,
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "•••",
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      SizedBox(height: 2),
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: TextStyle(fontSize: 11, color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: "Jateng Ngopeni Nglakoni. ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                              text:
+                                  "Platform layanan digital Pemerintah Provinsi Jawa Tengah",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
