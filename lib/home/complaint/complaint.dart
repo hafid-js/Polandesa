@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:polandesa/common/style/padding.dart';
 import 'package:polandesa/common/widgets/texts/section_heading.dart';
 import 'package:polandesa/home/complaint/list_complaints.dart';
+import 'package:polandesa/home/report/form_report.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import 'package:polandesa/utils/constants/helpers/hex_color.dart';
 
@@ -63,7 +64,8 @@ class AduanScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        GestureDetector(
+                          onTap: () => Get.to(() => FormReportScreen()), child: Container(
                           padding: const EdgeInsets.only(left: 20, top: 18),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -107,7 +109,8 @@ class AduanScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
+                        ),),
+                      
                         Padding(
                           padding: UPadding.detailCardPadding,
                           child: const Divider(
