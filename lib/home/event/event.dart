@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:intl/intl.dart';
+import 'package:polandesa/common/widgets/images/rounded_image.dart';
+import 'package:polandesa/home/event/detail_event.dart';
 import 'package:polandesa/utils/constants/colors.dart';
-import 'package:polandesa/utils/constants/helpers/hex_color.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -18,44 +18,61 @@ class _EventScreenState extends State<EventScreen> {
   DateTime? _selectedDay;
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
-
   @override
   void initState() {
     super.initState();
+
+    _selectedDay = DateTime.utc(
+      _focusedDay.year,
+      _focusedDay.month,
+      _focusedDay.day,
+    );
 
     initializeDateFormatting('id_ID', null).then((_) {
       setState(() {});
     });
   }
 
-  String _getFormatLabel(CalendarFormat format) {
-  switch (format) {
-    case CalendarFormat.month:
-      return "Bulan";      // Bulanan
-    case CalendarFormat.week:
-      return "Minggu";     // Mingguan
-    case CalendarFormat.twoWeeks:
-      return "2 Minggu";   // 2 Mingguan
-    default:
-      return "";
-  }
-}
-
-  final Map<DateTime, List<String>> _events = {
-    DateTime.utc(2026, 2, 22): ['Test', 'Adili Jokowi'],
-    DateTime.utc(2026, 2, 25): ['Workshop'],
-    DateTime.utc(2026, 2, 28): ['Webinar'],
+  final Map<DateTime, List<Map<String, String>>> _events = {
+    DateTime.utc(2026, 2, 22): [
+      {
+        'title': 'Kampung Ramadhan Tazkia 1447 H',
+        'image': 'assets/images/events/event-1.png',
+        'date': '01-28 Februari 2026',
+      },
+      {
+        'title': 'Festival UMKM Jateng 2026',
+        'image': 'assets/images/events/event-2.jpg',
+        'date': '05-20 Februari 2026',
+      },
+    ],
+    DateTime.utc(2026, 2, 25): [
+      {
+        'title': 'Tabligh Akbar Bersama Para tokoh Nasional.',
+        'image': 'assets/images/events/event-3.jpeg',
+        'date': '25 Februari 2026',
+      },
+      {
+        'title': 'Rame Rame Gelaran Takjil',
+        'image': 'assets/images/events/event-4.jpg',
+        'date': '25 Februari 2026',
+      },
+      {
+        'title': 'Jalan Sehat Desa Gunung Condong',
+        'image': 'assets/images/events/event-5.jpg',
+        'date': '25 Februari 2026',
+      },
+    ],
   };
 
-  List<String> _getEventsForDay(DateTime day) {
+  List<Map<String, String>> _getEventsForDay(DateTime day) {
     return _events[DateTime.utc(day.year, day.month, day.day)] ?? [];
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: HexColor.fromHex("#f7f8fb"),
+      backgroundColor: UColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -74,10 +91,7 @@ class _EventScreenState extends State<EventScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 300,
-              color: Colors.grey[100],
-              child: TableCalendar(
+            TableCalendar(
               firstDay: DateTime(2000),
               lastDay: DateTime(2100),
               focusedDay: _focusedDay,
@@ -87,6 +101,11 @@ class _EventScreenState extends State<EventScreen> {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
                 });
+              },
+              availableCalendarFormats: const {
+                CalendarFormat.month: 'Bulanan',
+                CalendarFormat.twoWeeks: '2 Mingguan',
+                CalendarFormat.week: 'Mingguan',
               },
               calendarFormat: _calendarFormat,
               onFormatChanged: (format) {
@@ -99,9 +118,7 @@ class _EventScreenState extends State<EventScreen> {
 
               headerVisible: true,
 
-              headerStyle: HeaderStyle(
-                formatButtonVisible: true,
-              ),
+              headerStyle: HeaderStyle(formatButtonVisible: true),
 
               calendarStyle: CalendarStyle(
                 todayDecoration: BoxDecoration(
@@ -133,31 +150,105 @@ class _EventScreenState extends State<EventScreen> {
                 },
               ),
             ),
-            ),
 
             const SizedBox(height: 16),
 
             if (_selectedDay != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-  "${_getEventsForDay(_selectedDay!).length} Event",
-  style: const TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  ),
-),
-                    const SizedBox(height: 8),
-                    ..._getEventsForDay(_selectedDay!).map(
-                      (event) => ListTile(
-                        leading: const Icon(Icons.event, color: Colors.blue),
-                        title: Text(event),
+              Container(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height,
+                  minWidth: MediaQuery.of(context).size.width
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(14),
+                    topRight: Radius.circular(14),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${_getEventsForDay(_selectedDay!).length} Event",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 18),
+                      ..._getEventsForDay(_selectedDay!).map(
+                        (event) => Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () => Get.to(() => DetailEventScreen()),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  URoundedImage(
+                                    fit: BoxFit.cover,
+                                    imageUrl: event['image']!,
+                                    isNetworkImage: false,
+                                    width: 90,
+                                    height: 90,
+                                    borderRadius: 8,
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                event['title']!,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: UColors.dark,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 8.0,
+                                              ),
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                size: 20,
+                                                color: UColors.dark,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          event['date']!,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],

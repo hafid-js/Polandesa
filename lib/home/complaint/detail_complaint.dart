@@ -25,7 +25,7 @@ class _DetailComplaintScreenState extends State<DetailComplaintScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor.fromHex("#f7f8fb"),
+      backgroundColor: UColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -152,7 +152,7 @@ class _DetailComplaintScreenState extends State<DetailComplaintScreen> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: HexColor.fromHex("#f7f8fb"),
+                              backgroundColor: UColors.backgroundColor,
                               foregroundColor: HexColor.fromHex("#FF4158D0"),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
@@ -270,20 +270,20 @@ class _DetailComplaintScreenState extends State<DetailComplaintScreen> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                              Column(
-  children: [
-    Image.asset(
-      "assets/icons/lingkaran-biru.jpeg",
-      height: 25,
-      width: 25,
-    ),
-    Container(
-      width: 2, 
-      height: 90,  
-      color: UColors.grey,
-    ),
-  ],
-),
+                                Column(
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/lingkaran-biru.jpeg",
+                                      height: 25,
+                                      width: 25,
+                                    ),
+                                    Container(
+                                      width: 2,
+                                      height: 90,
+                                      color: UColors.grey,
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(width: 12),
 
                                 Expanded(

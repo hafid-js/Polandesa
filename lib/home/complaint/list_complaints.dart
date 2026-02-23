@@ -41,7 +41,7 @@ class ListComplaintScren extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: HexColor.fromHex("#f7f8fb"),
+      backgroundColor: UColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -146,7 +146,7 @@ class ListComplaintScren extends StatelessWidget {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
                                               item["status"] == "Disposisi"
-                                              ? HexColor.fromHex("#f7f8fb")
+                                              ? UColors.backgroundColor
                                               : item["status"] == "Progres"
                                               ? HexColor.fromHex("#fcb900")
                                               : item["status"] == "Selesai"

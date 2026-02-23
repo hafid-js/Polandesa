@@ -309,7 +309,7 @@ class _FormReportScreenState extends State<FormReportScreen> {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: HexColor.fromHex("#f7f8fb"),
+                            color: UColors.backgroundColor,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(16),
                               bottomRight: Radius.circular(16),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
-import 'package:polandesa/home/event/event.dart';
+import 'package:polandesa/home/article/detail_article.dart';
+import 'package:polandesa/home/article/list_article.dart';
 import 'package:polandesa/main_screen.dart';
+import 'package:polandesa/profile/profile.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import '../utils/constants/theme/theme.dart';
 
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
       // home: OnBoardingScreen(),
       home: Scaffold(
         backgroundColor: UColors.primary,
-        body: EventScreen()
+        body: ProfileScreen()
       )
     );
   }

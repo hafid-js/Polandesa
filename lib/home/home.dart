@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:polandesa/common/style/padding.dart';
 import 'package:polandesa/common/widgets/custom_shapes/rounded_container.dart';
 import 'package:polandesa/common/widgets/images/circular_image.dart';
@@ -7,7 +8,11 @@ import 'package:polandesa/common/widgets/images/rounded_image.dart';
 import 'package:polandesa/common/widgets/primary_header_container.dart';
 import 'package:polandesa/common/widgets/search_bar.dart';
 import 'package:polandesa/common/widgets/texts/section_heading.dart';
+import 'package:polandesa/home/article/detail_article.dart';
+import 'package:polandesa/home/article/list_article.dart';
 import 'package:polandesa/home/complaint/complaint.dart';
+import 'package:polandesa/home/event/detail_event.dart';
+import 'package:polandesa/home/event/event.dart';
 import 'package:polandesa/home/widgets/home_app_bar.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import 'package:polandesa/utils/constants/helpers/hex_color.dart';
@@ -29,8 +34,106 @@ class HomeScreen extends StatelessWidget {
       {"name": "Semua", "image": "assets/icons/semua.png"},
     ];
 
+    final List<Map<String, dynamic>> menuCategories = [
+      {
+        "title": "Layanan Masyarakat",
+        "items": [
+          {
+            "icon": "assets/icons/aduan-masyarakat.png",
+            "title": "Aduan",
+            "subtitle": "Salurkan keluhan seputar layanan publik",
+          },
+          {
+            "icon": "assets/icons/pajak-kendaraan.png",
+            "title": "Pajak Kendaraan",
+            "subtitle": "Cek dan bayar pajak kendaraan dengan mudah",
+          },
+          {
+            "icon": "assets/icons/pajak-kendaraan.png",
+            "title": "Layanan Dukcapil",
+            "subtitle": "Urus dokumen kependudukan secara online",
+          },
+        ],
+      },
+      {
+        "title": "Karier dan Usaha",
+        "items": [
+          {
+            "icon": "assets/icons/aduan-masyarakat.png",
+            "title": "Bursa Kerja",
+            "subtitle": "Temukan lowongan pekerjaan di Jawa Tengah",
+          },
+          {
+            "icon": "assets/icons/zilenial-jateng.png",
+            "title": "Zilenial Jateng",
+            "subtitle": "Ruang kolaborasi kreatif anak muda Jateng",
+          },
+        ],
+      },
+      {
+        "title": "Kesehatan",
+        "items": [
+          {
+            "icon": "assets/icons/antrean-faskes.png",
+            "title": "Antrean Faskes",
+            "subtitle": "Daftar antrean fakses tanpa harus datang",
+          },
+          {
+            "icon": "assets/icons/zilenial-jateng.png",
+            "title": "Ambulans",
+            "subtitle": "Daftar ambulans terdekat",
+          },
+        ],
+      },
+      {
+        "title": "Transportasi",
+        "items": [
+          {
+            "icon": "assets/icons/antrean-faskes.png",
+            "title": "Trans Jateng",
+            "subtitle": "Info rute dan jadwal Bus Trans Jateng",
+          },
+          {
+            "icon": "assets/icons/zilenial-jateng.png",
+            "title": "SPKLU Terdekat",
+            "subtitle": "Info SPKLU di Jawa tengah",
+          },
+        ],
+      },
+      {
+        "title": "Kesehatan",
+        "items": [
+          {
+            "icon": "assets/icons/antrean-faskes.png",
+            "title": "Antrean Faskes",
+            "subtitle": "Daftar antrean fakses tanpa harus datang",
+          },
+          {
+            "icon": "assets/icons/zilenial-jateng.png",
+            "title": "Ambulans",
+            "subtitle": "Daftar ambulans terdekat",
+          },
+        ],
+      },
+      {
+        "title": "Informasi Publik",
+        "items": [
+          {
+            "icon": "assets/icons/event-jateng.png",
+            "title": "Event",
+            "subtitle": "Jadwal acara dan kegiatan di Jawa Tengah",
+          },
+          {
+            "icon": "assets/icons/zilenial-jateng.png",
+            "title": "Berita",
+            "subtitle": "Update berita dan info penting seputar Jawa Tengah",
+          },
+        ],
+      },
+    ];
+
     return Scaffold(
-      backgroundColor: HexColor.fromHex("#f7f8fb"),
+      backgroundColor: UColors.backgroundColor,
       appBar: AppBar(toolbarHeight: 0),
       body: SingleChildScrollView(
         child: Column(
@@ -76,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "Call Center Ngopeni Ngeplaki",
+                              "Call Center Ngopeni Ngapusi",
                               style: TextStyle(
                                 color: HexColor.fromHex("#FF4158D0"),
                                 fontWeight: FontWeight.bold,
@@ -121,7 +224,145 @@ class HomeScreen extends StatelessWidget {
                       (item) => GestureDetector(
                         onTap: () {
                           if (item['name'] == 'Aduan') {
-                            Get.to(() => AduanScreen());
+                            Get.to(() => ComplaintScreen());
+                          } else if (item['name'] == 'Event') {
+                            Get.to(() => EventScreen());
+                          } else if (item['name'] == 'Semua') {
+                            showBarModalBottomSheet(
+                              backgroundColor: Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.8,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 16,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Semua Layanan",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Expanded(
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: menuCategories.map((
+                                                kategori,
+                                              ) {
+                                                return Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      kategori["title"],
+                                                      style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                    ...kategori["items"].map<
+                                                      Widget
+                                                    >((item) {
+                                                      return Column(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () => Get.to(
+                                                              () =>
+                                                                  item["route"](),
+                                                            ),
+                                                            child: Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Image.asset(
+                                                                  item["icon"],
+                                                                  width: 50,
+                                                                  height: 50,
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 12,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        item["title"],
+                                                                        style: const TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              UColors.dark,
+                                                                          fontSize:
+                                                                              17,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        item["subtitle"],
+                                                                        style: const TextStyle(
+                                                                          color:
+                                                                              UColors.dark,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          fontSize:
+                                                                              12,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 4,
+                                                          ),
+                                                          Divider(
+                                                            color: Colors
+                                                                .grey[400],
+                                                            thickness: 1,
+                                                          ),
+                                                        ],
+                                                      );
+                                                    }).toList(),
+                                                    const SizedBox(height: 12),
+                                                  ],
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
                           } else {
                             showDialog(
                               context: context,
@@ -273,7 +514,7 @@ class HomeScreen extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: HexColor.fromHex("#f7f8fb"),
+                                backgroundColor: UColors.backgroundColor,
                                 foregroundColor: HexColor.fromHex("#FF4158D0"),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
@@ -315,6 +556,7 @@ class HomeScreen extends StatelessWidget {
                   USectionHeading(
                     title: "Agenda Hari Ini",
                     buttonTitle: "Lihat Semua",
+                    onPressed: () => Get.to(() => EventScreen()),
                   ),
                 ],
               ),
@@ -332,8 +574,9 @@ class HomeScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final articles = [
                       {
-                        "image": "assets/images/agenda/agenda-1.jpg",
-                        "title": "Monitoring Dana Desa Gunung Condong",
+                        "image": "assets/images/events/event-5.jpg",
+                        "title":
+                            "Jalan Sehat Dan Baksos Karang Taruna Desa Gunung Condong",
                         "date": "23-24 Februari 2026",
                       },
                       {
@@ -348,32 +591,38 @@ class HomeScreen extends StatelessWidget {
 
                     return SizedBox(
                       width: 165,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          URoundedImage(
-                            imageUrl: item["image"]!,
-                            isNetworkImage: false,
-                            height: 100,
-                            width: 165,
-                            fit: BoxFit.cover,
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            item["title"]!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                      child: GestureDetector(
+                        onTap: () => Get.to(() => DetailEventScreen()),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            URoundedImage(
+                              imageUrl: item["image"]!,
+                              isNetworkImage: false,
+                              height: 100,
+                              width: 165,
+                              fit: BoxFit.cover,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            item["date"]!,
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                        ],
+                            SizedBox(height: 6),
+                            Text(
+                              item["title"]!,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              item["date"]!,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -388,6 +637,7 @@ class HomeScreen extends StatelessWidget {
                   USectionHeading(
                     title: "Artikel Terbaru",
                     buttonTitle: "Lihat Semua",
+                    onPressed: () => Get.to(() => ListArticleScreen()),
                   ),
                 ],
               ),
@@ -405,8 +655,9 @@ class HomeScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final articles = [
                       {
-                        "image": "assets/images/artikel/artikel-1.png",
-                        "title": "Grebeg Ingkung di Desa Gunung Condong",
+                        "image": "assets/images/artikel/artikel-9.jpg",
+                        "title":
+                            "Sikapi Dampak Opsen dari Pemerintah Pusat, Pemprov Jateng Berlakukan Pengurangan Pajak Kendaraan Bermotor",
                         "date": "24 Februari 2026",
                       },
                       {
@@ -427,32 +678,38 @@ class HomeScreen extends StatelessWidget {
 
                     return SizedBox(
                       width: 165,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          URoundedImage(
-                            imageUrl: item["image"]!,
-                            isNetworkImage: false,
-                            height: 100,
-                            width: 165,
-                            fit: BoxFit.cover,
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            item["title"]!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                      child: GestureDetector(
+                        onTap: () => Get.to(() => DetailArticleScreen()),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            URoundedImage(
+                              imageUrl: item["image"]!,
+                              isNetworkImage: false,
+                              height: 100,
+                              width: 165,
+                              fit: BoxFit.cover,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            item["date"]!,
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                        ],
+                            SizedBox(height: 6),
+                            Text(
+                              item["title"]!,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              item["date"]!,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

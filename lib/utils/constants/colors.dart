@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:polandesa/utils/constants/helpers/hex_color.dart';
 
 class UColors {
 
@@ -40,4 +41,6 @@ class UColors {
   static const Color lightGrey = Color(0xFFF9F9F9);
   static const Color white = Color(0xFFFFFFFF);
   static const Color transparent = Color(0x00000000);
+
+  static Color backgroundColor = HexColor.fromHex("#f7f8fb");
 }

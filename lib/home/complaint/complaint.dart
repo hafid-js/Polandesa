@@ -5,15 +5,14 @@ import 'package:polandesa/common/widgets/texts/section_heading.dart';
 import 'package:polandesa/home/complaint/list_complaints.dart';
 import 'package:polandesa/home/report/form_report.dart';
 import 'package:polandesa/utils/constants/colors.dart';
-import 'package:polandesa/utils/constants/helpers/hex_color.dart';
 
-class AduanScreen extends StatelessWidget {
-  const AduanScreen({super.key});
+class ComplaintScreen extends StatelessWidget {
+  const ComplaintScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor.fromHex("#f7f8fb"),
+      backgroundColor: UColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
