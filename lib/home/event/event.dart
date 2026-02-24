@@ -114,7 +114,7 @@ class _EventScreenState extends State<EventScreen> {
                 });
               },
 
-              locale: 'id_ID',
+              locale: Locale('id','ID'),
 
               headerVisible: true,
 
