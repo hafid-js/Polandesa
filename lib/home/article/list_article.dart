@@ -12,12 +12,11 @@ class ListArticleScreen extends StatefulWidget {
   State<ListArticleScreen> createState() => _ListArticleScreenState();
 }
 
-class _ListArticleScreenState extends State<ListArticleScreen>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
+class _ListArticleScreenState extends State<ListArticleScreen> {
   late List<bool> bookmarkStatus;
 
-  final List<String> tabs = [
+  // Daftar kategori
+  final List<String> categories = [
     "Publik",
     "Rilis",
     "Berita Daerah",
@@ -25,8 +24,12 @@ class _ListArticleScreenState extends State<ListArticleScreen>
     "Berita Hoaks",
   ];
 
+  // Kategori aktif
+  String activeCategory = "Publik";
+
   final List<Map<String, String>> articles = [
     {
+      "category": "Rilis",
       "image": "assets/images/artikel/artikel-9.jpg",
       "title":
           "Sikapi Dampak Opsen dari Pemerintah Pusat, Pemprov Jateng Berlakukan Pengurangan Pajak Kendaraan Bermotor",
@@ -35,12 +38,14 @@ class _ListArticleScreenState extends State<ListArticleScreen>
       "date": "19 Februari 2026",
     },
     {
+      "category": "Publik",
       "image": "assets/images/artikel/artikel-5.jpg",
       "title": "Pemprov Jateng Gelar Rapat Koordinasi",
       "desc": "Rapat koordinasi membahas percepatan pembangunan daerah ...",
       "date": "20 Februari 2026",
     },
     {
+      "category": "Berita Daerah",
       "image": "assets/images/artikel/artikel-6.jpg",
       "title": "Program Baru untuk UMKM Jawa Tengah",
       "desc": "Program ini ditujukan untuk meningkatkan daya saing UMKM ...",
@@ -48,21 +53,21 @@ class _ListArticleScreenState extends State<ListArticleScreen>
     },
   ];
 
+  // Filter artikel sesuai kategori aktif
+  List<Map<String, String>> get filteredArticles {
+    return articles
+        .where((article) => article["category"] == activeCategory)
+        .toList();
+  }
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
     bookmarkStatus = List.generate(articles.length, (_) => false);
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
   Widget buildArticleCard(int index) {
-    final article = articles[index];
+    final article = filteredArticles[index];
     return SizedBox(
       height: 140,
       child: GestureDetector(
@@ -166,40 +171,39 @@ class _ListArticleScreenState extends State<ListArticleScreen>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: [
+            // Filter Button horizontal
             SizedBox(
-              height: 40,
+              height: 35,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: tabs.length,
+                itemCount: categories.length,
                 itemBuilder: (context, index) {
-                  final isSelected = _tabController.index == index;
+                  final category = categories[index];
+                  final isActive = category == activeCategory;
                   return Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          _tabController.index = index;
+                          activeCategory = category;
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isSelected
+                        backgroundColor: isActive
                             ? HexColor.fromHex("#4158d0")
                             : Colors.white,
-                        foregroundColor: isSelected
-                            ? Colors.white
-                            : Colors.black,
+                        foregroundColor: isActive ? Colors.white : Colors.black,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(22),
                         ),
-                        elevation: 0,
+                        elevation: 0
                       ),
                       child: Text(
-                        tabs[index],
+                        category,
                         style: const TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -213,20 +217,14 @@ class _ListArticleScreenState extends State<ListArticleScreen>
 
             const SizedBox(height: 16),
 
+            // List artikel filtered
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  ListView.builder(
-                    itemCount: articles.length,
-                    itemBuilder: (context, index) => buildArticleCard(index),
-                  ),
-                  Center(child: Text("Konten Rilis")),
-                  Center(child: Text("Konten Berita Daerah")),
-                  Center(child: Text("Konten Berita OPD")),
-                  Center(child: Text("Konten Berita Hoaks")),
-                ],
-              ),
+              child: filteredArticles.isEmpty
+                  ? Center(child: Text("Belum ada artikel di kategori ini"))
+                  : ListView.builder(
+                      itemCount: filteredArticles.length,
+                      itemBuilder: (context, index) => buildArticleCard(index),
+                    ),
             ),
           ],
         ),

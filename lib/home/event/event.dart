@@ -114,8 +114,6 @@ class _EventScreenState extends State<EventScreen> {
                 });
               },
 
-              locale: Locale('id','ID'),
-
               headerVisible: true,
 
               headerStyle: HeaderStyle(formatButtonVisible: true),

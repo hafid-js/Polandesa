@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:polandesa/home/activity/activity.dart';
 import 'package:polandesa/home/home.dart';
 import 'package:polandesa/profile/profile.dart';
 import 'package:polandesa/utils/constants/helpers/hex_color.dart';
@@ -15,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     HomeScreen(), 
-    Center(child: Text('Search')),
+    ActivityScreen(),
     ProfileScreen()
   ];
 

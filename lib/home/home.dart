@@ -211,7 +211,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+              padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
               child: GridView.count(
                 crossAxisCount: 4,
                 crossAxisSpacing: 12,
@@ -296,8 +296,8 @@ class HomeScreen extends StatelessWidget {
                                                               children: [
                                                                 Image.asset(
                                                                   item["icon"],
-                                                                  width: 50,
-                                                                  height: 50,
+                                                                  width: 45,
+                                                                  height: 45,
                                                                 ),
                                                                 const SizedBox(
                                                                   width: 12,
@@ -385,6 +385,7 @@ class HomeScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Image.asset(item["image"]!, width: 50, height: 50),
+                            SizedBox(height: 2),
                             SizedBox(
                               width: 60,
                               child: Text(

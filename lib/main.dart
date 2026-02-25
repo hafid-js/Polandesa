@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:polandesa/main_screen.dart';
-import 'package:polandesa/profile/change_password.dart';
-import 'package:polandesa/profile/delete_account.dart';
-import 'package:polandesa/profile/edit_profile.dart';
-import 'package:polandesa/profile/new_password.dart';
-import 'package:polandesa/profile/setting_profile.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import '../utils/constants/theme/theme.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -41,10 +36,10 @@ class MyApp extends StatelessWidget {
         backgroundColor: UColors.primary,
         body: MainScreen()
       ),
-      localizationsDelegates: _localization.localizationsDelegates,
-      supportedLocales: [
-        Locale('id','ID')
-      ],
+      // localizationsDelegates: _localization.localizationsDelegates,
+      // supportedLocales: [
+      //   Locale('id','ID')
+      // ],
     );
   }
 }

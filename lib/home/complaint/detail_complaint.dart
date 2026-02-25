@@ -279,7 +279,7 @@ class _DetailComplaintScreenState extends State<DetailComplaintScreen> {
                                     ),
                                     Container(
                                       width: 2,
-                                      height: 90,
+                                      height: 140,
                                       color: UColors.grey,
                                     ),
                                   ],
@@ -311,6 +311,99 @@ class _DetailComplaintScreenState extends State<DetailComplaintScreen> {
                                           ),
                                           child: const Text(
                                             "Disposisi",
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 14),
+
+                                      Text(
+                                        "ADMIN GUBERNURAN",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 2),
+
+                                      Text(
+                                        "21 Feb 2026 06:01",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: UColors.darkGrey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 6),
+
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          color: Colors.grey[100],
+                                        ),
+
+                                        child: Padding(
+                                          padding: UPadding.screenPadding,
+                                          child: Text(
+                                            "Laporan telah diteruskan ke Balai Besar Pelaksanaan Jalan Besar Nasional Jawa Tengah & DIY",
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height:12,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/lingkaran-biru.jpeg",
+                                      height: 25,
+                                      width: 25,
+                                    ),
+                                    Container(
+                                      width: 2,
+                                      height: 140,
+                                      color: UColors.grey,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 12),
+
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 90,
+                                        height: 30,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: HexColor.fromHex(
+                                              "#f7f8fb",
+                                            ),
+                                            foregroundColor: HexColor.fromHex(
+                                              "#FF4158D0",
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          child: const Text(
+                                            "Verifikasi",
                                             style: TextStyle(fontSize: 12),
                                           ),
                                         ),

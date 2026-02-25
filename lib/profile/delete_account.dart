@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:polandesa/profile/new_password.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import 'package:polandesa/utils/constants/helpers/hex_color.dart';
 
