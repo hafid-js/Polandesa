@@ -36,7 +36,7 @@ class _EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UColors.backgroundColor,
+      backgroundColor: UColors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -55,56 +55,65 @@ class _EventScreenState extends State<EventScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            TableCalendar(
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-              },
-              availableCalendarFormats: const {
-                CalendarFormat.month: 'Bulanan',
-                CalendarFormat.twoWeeks: '2 Mingguan',
-                CalendarFormat.week: 'Mingguan',
-              },
-              calendarFormat: _calendarFormat,
-              onFormatChanged: (format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              },
-              headerVisible: true,
-              headerStyle: const HeaderStyle(formatButtonVisible: true),
-              calendarStyle: CalendarStyle(
-                todayDecoration: const BoxDecoration(
-                  color: Colors.blueAccent,
-                  shape: BoxShape.circle,
+            Container(
+              height: 300,
+              color: UColors.backgroundColor,
+              child: TableCalendar(
+                firstDay: DateTime(2000),
+                lastDay: DateTime(2100),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                },
+                availableCalendarFormats: const {
+                  CalendarFormat.month: 'Bulanan',
+                  CalendarFormat.twoWeeks: '2 Mingguan',
+                  CalendarFormat.week: 'Mingguan',
+                },
+                calendarFormat: _calendarFormat,
+                onFormatChanged: (format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                },
+                headerVisible: true,
+                headerStyle: const HeaderStyle(formatButtonVisible: true),
+                calendarStyle: CalendarStyle(
+                  todayDecoration: const BoxDecoration(
+                    color: Colors.blueAccent,
+                    shape: BoxShape.circle,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.blueAccent.withAlpha(130),
+                    shape: BoxShape.circle,
+                  ),
                 ),
-                selectedDecoration: BoxDecoration(
-                  color: Colors.blueAccent.withAlpha(130),
-                  shape: BoxShape.circle,
+                eventLoader: _getEventsForDay,
+                calendarBuilders: CalendarBuilders(
+                  markerBuilder: (context, date, events) {
+                    if (events.isNotEmpty) {
+                      return const Positioned(
+                        child: CircleAvatar(
+                          radius: 4,
+                          backgroundColor: Color.fromRGBO(65, 88, 208, 1.0),
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                 ),
-              ),
-              eventLoader: _getEventsForDay,
-              calendarBuilders: CalendarBuilders(
-                markerBuilder: (context, date, events) {
-                  if (events.isNotEmpty) {
-                    return const Positioned(
-                      child: CircleAvatar(
-                        radius: 4,
-                        backgroundColor: Color.fromRGBO(65, 88, 208, 1.0),
-                      ),
-                    );
-                  }
-                  return const SizedBox();
+                enabledDayPredicate: (day) {
+                  return day.isAfter(
+                        DateTime.now().subtract(const Duration(days: 1)),
+                      ) ||
+                      isSameDay(day, DateTime.now());
                 },
               ),
             ),
-
             const SizedBox(height: 16),
 
             if (_selectedDay != null)
@@ -117,7 +126,10 @@ class _EventScreenState extends State<EventScreen> {
                     topRight: Radius.circular(14),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

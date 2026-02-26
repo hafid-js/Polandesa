@@ -1,13 +1,14 @@
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:polandesa/common/widgets/images/circular_image.dart';
-import 'package:polandesa/features/complaint/form_complaint.dart';
 import 'package:polandesa/utils/constants/helpers/hex_color.dart';
-
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
@@ -16,33 +17,60 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final TextEditingController _nikController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  Groceries? _selected;
-
-  @override
-  void dispose() {
-    _nikController.dispose();
-    _dateController.dispose();
-    super.dispose();
-  }
+  File? _profileImage;
+  Groceries? _selectedGender;
 
   final List<String> religionItems = [
-    'ISLAM',
-    'PROTESTAN',
-    'KATHOLIK',
-    'HINDU',
-    'BUDDHA',
-    'KONGHUCU',
+    'ISLAM', 'PROTESTAN', 'KATHOLIK', 'HINDU', 'BUDDHA', 'KONGHUCU',
   ];
 
   final List<String> marriedStatus = [
-    'BELUM KAWIN',
-    'KAWIN',
-    'CERAI HIDUP',
-    'CERAI MATI',
+    'BELUM KAWIN', 'KAWIN', 'CERAI HIDUP', 'CERAI MATI',
   ];
-  String? selectedValue;
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _profileImage = File(image.path);
+      });
+    }
+  }
+
+  Future<void> _pickDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1950),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: HexColor.fromHex("#4158D0"),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: HexColor.fromHex("#4158D0"),
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+      setState(() {
+        _dateController.text = formattedDate;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,956 +85,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           centerTitle: true,
           title: Text(
             "Ubah Informasi Pribadi",
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           bottom: TabBar(
             dividerColor: Colors.grey[400],
-            dividerHeight: 2,
             labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            unselectedLabelStyle: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 14,
-            ),
+            unselectedLabelStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
             labelPadding: EdgeInsets.only(bottom: 12, top: 12),
             indicatorColor: HexColor.fromHex("#ff6900"),
             labelColor: HexColor.fromHex("#ff6900"),
-            indicatorSize: TabBarIndicatorSize.tab,
             indicator: BoxDecoration(
               color: HexColor.fromHex("#ff6900"),
               backgroundBlendMode: BlendMode.color,
             ),
+            indicatorSize: TabBarIndicatorSize.tab,
             tabs: [
               Text("Data Profil", style: TextStyle(fontSize: 14)),
-              Text("Data Diri", style: TextStyle()),
+              Text("Data Diri", style: TextStyle(fontSize: 14)),
             ],
           ),
         ),
-
         body: TabBarView(
           children: [
-            // Tab Data Profil
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
+            SingleChildScrollView(
               child: Column(
                 children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      UCircularImage(
-                        image: "assets/images/profile.jpeg",
-                        height: 100,
-                        width: 100,
-                      ),
-                      Positioned(
-                        bottom: -14,
-                        right: -1,
-                        top: 40,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Buat Ubah Foto Profil"),
-                                  duration: Duration(seconds: 1),
-                                ),
-                              );
-                            },
-                            child: Icon(
-                              Icons.camera_alt_rounded,
-                              size: 16,
-                              color: HexColor.fromHex("#4158D0"),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: 20),
+                  ProfileImagePicker(
+                    imageFile: _profileImage,
+                    onPickImage: _pickImage,
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 25,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Informasi Utama",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        TextFormField(
-                          focusNode: FocusNode(),
-                          decoration: InputDecoration(
-                            labelText: "Nama Lengkap",
-                            labelStyle: TextStyle(fontSize: 14),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: HexColor.fromHex("#4158D0"),
-                                width: 1,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 14),
-                        TextFormField(
-                          focusNode: FocusNode(),
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            labelStyle: TextStyle(fontSize: 14),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: HexColor.fromHex("#4158D0"),
-                                width: 1,
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                              Iconsax.edit,
-                              fontWeight: FontWeight.w900,
-                              size: 18,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: HexColor.fromHex("#4158D0"),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 14),
-                        TextFormField(
-                          focusNode: FocusNode(),
-                          decoration: InputDecoration(
-                            labelText: "Nomor Whatsapp",
-                            labelStyle: TextStyle(fontSize: 14),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: HexColor.fromHex("#4158D0"),
-                                width: 1,
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                              Iconsax.edit,
-                              fontWeight: FontWeight.bold,
-                              size: 18,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: HexColor.fromHex("#4158D0"),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  MainInfoForm(),
                 ],
               ),
             ),
-
-            // Tab Data Diri
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Data Diri",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextFormField(
-                            focusNode: FocusNode(),
-                            decoration: InputDecoration(
-                              labelText: "Email",
-                              labelStyle: TextStyle(fontSize: 14),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 14),
-                          TextFormField(
-                            focusNode: FocusNode(),
-                            decoration: InputDecoration(
-                              labelText: "Nama Lengkap",
-                              labelStyle: TextStyle(fontSize: 14),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 14),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: "Nomor Whatsapp",
-                              labelStyle: TextStyle(fontSize: 14),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 14),
-                          TextFormField(
-                            maxLength: 16,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            focusNode: FocusNode(),
-                            decoration: InputDecoration(
-                              labelText: "NIK",
-                              labelStyle: TextStyle(fontSize: 14),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(height: 20),
-
-                          Text(
-                            "Tempat Lahir",
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                          ),
-                          TextFormField(
-                            focusNode: FocusNode(),
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            controller: _dateController,
-                            decoration: InputDecoration(
-                              labelText: "Tanggal Lahir",
-                              labelStyle: TextStyle(fontSize: 14),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: HexColor.fromHex("#4158D0"),
-                                ),
-                              ),
-                            ),
-                            readOnly: true,
-                            onTap: () async {
-                              DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(1950),
-                                lastDate: DateTime(2100),
-                                builder: (BuildContext context, Widget? child) {
-                                  return Theme(
-                                    data: Theme.of(context).copyWith(
-                                      colorScheme: ColorScheme.light(
-                                        primary: HexColor.fromHex("#4158D0"),
-                                        onPrimary: Colors.white,
-                                        onSurface: Colors.black,
-                                      ),
-                                      textTheme: TextTheme(),
-                                      textButtonTheme: TextButtonThemeData(
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: HexColor.fromHex(
-                                            "#4158D0",
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    child: child!,
-                                  );
-                                },
-                              );
-
-                              if (pickedDate != null) {
-                                String formattedDate = DateFormat(
-                                  'dd-MM-yyy',
-                                ).format(pickedDate);
-                                setState(() {
-                                  _dateController.text = formattedDate;
-                                });
-                              } else {}
-                            },
-                          ),
-
-                          SizedBox(height: 14),
-                          Text(
-                            "Jenis Kelamin",
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    border: Border.all(
-                                      color: HexColor.fromHex("#4158D0"),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: IntrinsicHeight(
-                                    child: Row(
-                                      children: [
-                                        Radio<Groceries>(
-                                          value: Groceries.pickles,
-                                          groupValue: _selected,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selected = value;
-                                            });
-                                          },
-                                          fillColor:
-                                              MaterialStateProperty.resolveWith<
-                                                Color
-                                              >((states) {
-                                                if (states.contains(
-                                                  MaterialState.selected,
-                                                )) {
-                                                  return HexColor.fromHex(
-                                                    "#4158D0",
-                                                  );
-                                                }
-                                                return Colors.grey;
-                                              }),
-                                        ),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          'Laki-Laki',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              SizedBox(width: 20),
-
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    border: Border.all(
-                                      color: HexColor.fromHex("#4158D0"),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: IntrinsicHeight(
-                                    child: Row(
-                                      children: [
-                                        Radio<Groceries>(
-                                          value: Groceries.tomato,
-                                          groupValue: _selected,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selected = value;
-                                            });
-                                          },
-                                          fillColor:
-                                              MaterialStateProperty.resolveWith<
-                                                Color
-                                              >((states) {
-                                                if (states.contains(
-                                                  MaterialState.selected,
-                                                )) {
-                                                  return HexColor.fromHex(
-                                                    "#4158D0",
-                                                  );
-                                                }
-                                                return Colors.grey;
-                                              }),
-                                        ),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          'Perempuan',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-
-                          Form(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DropdownButtonFormField2<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    labelText: "Agama",
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: HexColor.fromHex("#4158D0"),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text(
-                                    'Pilih Agama',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  items: religionItems
-                                      .map(
-                                        (item) => DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Silahkan Pilih Agama.';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {},
-                                  onSaved: (value) {
-                                    selectedValue = value.toString();
-                                  },
-                                  buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.only(right: 8),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black45,
-                                    ),
-                                    iconSize: 24,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 14),
-
-                          Form(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DropdownButtonFormField2<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    labelText: "Status Perkawinan",
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: HexColor.fromHex("#4158D0"),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text(
-                                    'Pilih Status Perkawinan',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  items: marriedStatus
-                                      .map(
-                                        (item) => DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Pilih Status Perkawinan';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {},
-                                  onSaved: (value) {
-                                    selectedValue = value.toString();
-                                  },
-                                  buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.only(right: 8),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black45,
-                                    ),
-                                    iconSize: 24,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 14),
-
-                          Text(
-                            "Alamat",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Form(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DropdownButtonFormField2<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    labelText: "Provinsi",
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: HexColor.fromHex("#4158D0"),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text(
-                                    'Pilih Provinsi',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  items: marriedStatus
-                                      .map(
-                                        (item) => DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Pilih Provinsi';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {},
-                                  onSaved: (value) {
-                                    selectedValue = value.toString();
-                                  },
-                                  buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.only(right: 8),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black45,
-                                    ),
-                                    iconSize: 24,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 14),
-                          Form(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DropdownButtonFormField2<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    labelText: "Kabupaten/Kota",
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: HexColor.fromHex("#4158D0"),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text(
-                                    'Pilih Provinsi dahulu',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  items: marriedStatus
-                                      .map(
-                                        (item) => DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Pilih Provinsi';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {},
-                                  onSaved: (value) {
-                                    selectedValue = value.toString();
-                                  },
-                                  buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.only(right: 8),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black45,
-                                    ),
-                                    iconSize: 24,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 14),
-                          Form(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DropdownButtonFormField2<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    labelText: "Kecamatan",
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: HexColor.fromHex("#4158D0"),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text(
-                                    'Pilih Kabupaten/Kota dahulu',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  items: marriedStatus
-                                      .map(
-                                        (item) => DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Pilih Kecamatan';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {},
-                                  onSaved: (value) {
-                                    selectedValue = value.toString();
-                                  },
-                                  buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.only(right: 8),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black45,
-                                    ),
-                                    iconSize: 24,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 14),
-                          Form(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DropdownButtonFormField2<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    labelText: "Kelurahan",
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: HexColor.fromHex("#4158D0"),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text(
-                                    'Pilih Kecamatan dahulu',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  items: marriedStatus
-                                      .map(
-                                        (item) => DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Pilih Kelurahan';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {},
-                                  onSaved: (value) {
-                                    selectedValue = value.toString();
-                                  },
-                                  buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.only(right: 8),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black45,
-                                    ),
-                                    iconSize: 24,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 14),
-                          TextFormField(
-                            maxLines: null,
-                            minLines: 8,
-                            expands: false,
-
-                            decoration: InputDecoration(
-                              labelText: "Alamat Lengkap",
-                              labelStyle: TextStyle(fontSize: 14),
-                              alignLabelWithHint: true,
-                              enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: HexColor.fromHex("#4158D0"),
-                                width: 1,
-                              ),
-                            ),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.all(16.0),
+                child: PersonalDataForm(
+                  dateController: _dateController,
+                  pickDate: _pickDate,
+                  selectedGender: _selectedGender,
+                  onGenderChanged: (value) {
+                    setState(() {
+                      _selectedGender = value;
+                    });
+                  },
+                  religionItems: religionItems,
+                  marriedStatus: marriedStatus,
                 ),
               ),
             ),
           ],
         ),
-
         bottomNavigationBar: Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromRGBO(65, 88, 208, 1),
+              backgroundColor: HexColor.fromHex("#4158D0"),
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
@@ -1023,3 +160,249 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
+
+class ProfileImagePicker extends StatelessWidget {
+  final File? imageFile;
+  final VoidCallback onPickImage;
+
+  const ProfileImagePicker({super.key, required this.imageFile, required this.onPickImage});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        UCircularImage(
+          image: imageFile?.path ?? "assets/images/profile.jpeg",
+          isNetworkImage: imageFile != null,
+          height: 100,
+          width: 100,
+        ),
+        Positioned(
+          bottom: -14,
+          right: -1,
+          top: 40,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+            child: InkWell(
+              onTap: onPickImage,
+              child: Icon(Icons.camera_alt_rounded, size: 16, color: HexColor.fromHex("#4158D0")),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class MainInfoForm extends StatelessWidget {
+  const MainInfoForm({super.key});
+
+  Widget _buildTextField({required String label, IconData? suffixIcon}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(fontSize: 14),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: HexColor.fromHex("#4158D0"), width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: HexColor.fromHex("#4158D0")),
+          ),
+          suffixIcon: suffixIcon != null ? Icon(suffixIcon, size: 18) : null,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Informasi Utama", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          _buildTextField(label: "Nama Lengkap"),
+          _buildTextField(label: "Email", suffixIcon: Iconsax.edit),
+          _buildTextField(label: "Nomor Whatsapp", suffixIcon: Iconsax.edit),
+        ],
+      ),
+    );
+  }
+}
+
+class PersonalDataForm extends StatelessWidget {
+  final TextEditingController dateController;
+  final VoidCallback pickDate;
+  final Groceries? selectedGender;
+  final ValueChanged<Groceries?> onGenderChanged;
+  final List<String> religionItems;
+  final List<String> marriedStatus;
+
+  const PersonalDataForm({
+    super.key,
+    required this.dateController,
+    required this.pickDate,
+    required this.selectedGender,
+    required this.onGenderChanged,
+    required this.religionItems,
+    required this.marriedStatus,
+  });
+
+  Widget _buildTextField({required String label, bool isNumber = false, int? maxLength}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: TextFormField(
+        keyboardType: isNumber ? TextInputType.number : null,
+        inputFormatters: isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
+        maxLength: maxLength,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(fontSize: 14),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: HexColor.fromHex("#4158D0"), width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: HexColor.fromHex("#4158D0")),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdown({required String label, required List<String> items}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: DropdownButtonFormField2<String>(
+        isExpanded: true,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+          labelText: label,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: HexColor.fromHex("#4158D0"), width: 1),
+          ),
+        ),
+        hint: Text('Pilih $label', style: TextStyle(fontSize: 14)),
+        items: items.map((item) => DropdownMenuItem(value: item, child: Text(item, style: TextStyle(fontSize: 14)))).toList(),
+        onChanged: (value) {},
+      ),
+    );
+  }
+
+  Widget _buildGenderSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Jenis Kelamin", style: TextStyle(fontSize: 12, color: Colors.black)),
+        SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _genderRadio("Laki-Laki", Groceries.pickles),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: _genderRadio("Perempuan", Groceries.tomato),
+            ),
+          ],
+        ),
+        SizedBox(height: 20,)
+      ],
+    );
+  }
+
+
+  Widget _genderRadio(String label, Groceries value) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: HexColor.fromHex("#4158D0"), width: 1),
+      ),
+      child: Row(
+        children: [
+          Radio<Groceries>(
+            value: value,
+            groupValue: selectedGender,
+            onChanged: onGenderChanged,
+            fillColor: MaterialStateProperty.resolveWith((states) => states.contains(MaterialState.selected) ? HexColor.fromHex("#4158D0") : Colors.grey),
+          ),
+          SizedBox(width: 4),
+          Text(label, style: TextStyle(fontSize: 14)),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Data Diri", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
+        _buildTextField(label: "Email"),
+        _buildTextField(label: "Nama Lengkap"),
+        _buildTextField(label: "Nomor Whatsapp"),
+        _buildTextField(label: "NIK", isNumber: true, maxLength: 16),
+        _buildTextField(label: "Tempat Lahir"),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 14),
+          child: TextFormField(
+            controller: dateController,
+            readOnly: true,
+            onTap: pickDate,
+            decoration: InputDecoration(
+              labelText: "Tanggal Lahir",
+              labelStyle: TextStyle(fontSize: 14),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: HexColor.fromHex("#4158D0"), width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: HexColor.fromHex("#4158D0")),
+              ),
+            ),
+          ),
+        ),
+        _buildGenderSelector(),
+        _buildDropdown(label: "Agama", items: religionItems),
+        _buildDropdown(label: "Status Perkawinan", items: marriedStatus),
+        _buildDropdown(label: "Provinsi", items: marriedStatus),
+        _buildDropdown(label: "Kabupaten/Kota", items: marriedStatus),
+        _buildDropdown(label: "Kecamatan", items: marriedStatus),
+        _buildDropdown(label: "Kelurahan", items: marriedStatus),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 14),
+          child: TextFormField(
+            maxLines: 8,
+            decoration: InputDecoration(
+              labelText: "Alamat Lengkap",
+              labelStyle: TextStyle(fontSize: 14),
+              alignLabelWithHint: true,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: HexColor.fromHex("#4158D0"), width: 1),
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Enum untuk gender
+enum Groceries { pickles, tomato }

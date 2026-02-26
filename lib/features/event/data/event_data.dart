@@ -1,5 +1,5 @@
 final Map<DateTime, List<Map<String, String>>> eventsData = {
-  DateTime.utc(2026, 2, 22): [
+  DateTime.utc(2026, 2, 28): [
     {
       'title': 'Kampung Ramadhan Tazkia 1447 H',
       'image': 'assets/images/events/event-1.png',
@@ -11,7 +11,7 @@ final Map<DateTime, List<Map<String, String>>> eventsData = {
       'date': '05-20 Februari 2026',
     },
   ],
-  DateTime.utc(2026, 2, 25): [
+  DateTime.utc(2026, 2, 26): [
     {
       'title': 'Tabligh Akbar Bersama Para tokoh Nasional.',
       'image': 'assets/images/events/event-3.jpeg',

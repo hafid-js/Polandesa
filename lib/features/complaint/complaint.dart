@@ -63,7 +63,7 @@ class ComplaintScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
+                        InkWell(
                           onTap: () => Get.to(() => FormComplaintScreen()), child: Container(
                           padding: const EdgeInsets.only(left: 20, top: 18),
                           child: Row(

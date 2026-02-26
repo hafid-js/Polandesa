@@ -57,7 +57,7 @@ class SettingProfileScreen extends StatelessWidget {
         padding: EdgeInsets.only(left: 5, right: 5),
         child: Column(
           children: [
-            GestureDetector(
+            InkWell(
               onTap: () => Get.to(() => ChangePasswordScreen()),
               child: Card(
               color: UColors.white,
@@ -93,7 +93,7 @@ class SettingProfileScreen extends StatelessWidget {
             ),
             ),
 
-            GestureDetector(
+            InkWell(
               onTap: () => Get.to(() => DeleteAccountScreen()),
               child: Card(
               color: UColors.white,

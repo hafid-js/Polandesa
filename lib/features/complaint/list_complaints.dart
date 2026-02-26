@@ -5,8 +5,21 @@ import 'package:polandesa/features/complaint/data/complaints.dart';
 import 'package:polandesa/features/complaint/detail_complaint.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 
-class ListComplaintScreen extends StatelessWidget {
+class ListComplaintScreen extends StatefulWidget {
   const ListComplaintScreen({super.key});
+
+  @override
+  State<ListComplaintScreen> createState() => _ListComplaintScreenState();
+}
+
+class _ListComplaintScreenState extends State<ListComplaintScreen> {
+  List<bool> savedStates = [];
+
+  @override
+  void initState() {
+    super.initState();
+    savedStates = List.generate(complaints.length, (_) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +48,13 @@ class ListComplaintScreen extends StatelessWidget {
           final item = complaints[index];
           return UComplaintCard(
             complaint: item,
+            isBookmarked: savedStates[index],
             onTap: () => Get.to(() => DetailComplaintScreen()),
+            onBookmarkTap: () {
+              setState(() {
+                savedStates[index] = !savedStates[index];
+              });
+            },
           );
         },
       ),

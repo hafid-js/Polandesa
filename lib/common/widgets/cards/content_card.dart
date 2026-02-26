@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
 import 'package:polandesa/common/models/content_item.dart';
 import 'package:polandesa/common/widgets/images/rounded_image.dart';
-import 'package:polandesa/features/article/detail_article.dart';
 
 class ContentCard extends StatelessWidget {
   const ContentCard({
@@ -18,7 +16,7 @@ class ContentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 165,
-      child: GestureDetector(
+      child: InkWell(
         onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

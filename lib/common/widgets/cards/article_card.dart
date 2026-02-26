@@ -21,7 +21,7 @@ class UArticleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 140,
-      child: GestureDetector(
+      child: InkWell(
         onTap: onTap,
         child: Card(
           color: Colors.white,
@@ -68,7 +68,7 @@ class UArticleCard extends StatelessWidget {
                             article["date"]!,
                             style: const TextStyle(fontSize: 12),
                           ),
-                          GestureDetector(
+                          InkWell(
                             onTap: onBookmarkToggle,
                             child: Icon(
                               isBookmarked

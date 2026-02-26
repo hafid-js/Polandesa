@@ -69,7 +69,7 @@ class DeleteAccountScreen extends StatelessWidget {
             maxLines: null,
             minLines: 8,
             decoration: InputDecoration(
-              labelText: "Rincian Laporan",
+              labelText: "Lanjut Hapus",
               labelStyle: const TextStyle(fontSize: 14),
               alignLabelWithHint: true,
               border: OutlineInputBorder(
@@ -88,13 +88,13 @@ class DeleteAccountScreen extends StatelessWidget {
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
         child: ElevatedButton(
           onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Akun Berhasil Dihapus!"),
-                                  duration: Duration(seconds: 1),
-                                ),
-                              );
-                            },
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Akun Berhasil Dihapus!"),
+                duration: Duration(seconds: 1),
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: HexColor.fromHex("#FE2D2D"),
             foregroundColor: Colors.white,
@@ -109,7 +109,7 @@ class DeleteAccountScreen extends StatelessWidget {
               Icon(Iconsax.trash, size: 20),
               SizedBox(width: 6),
               Text(
-                "Simpan",
+                "Lanjut Hapus",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ],

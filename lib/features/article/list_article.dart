@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:polandesa/common/widgets/images/rounded_image.dart';
 import 'package:polandesa/features/article/data/articles.dart';
 import 'package:polandesa/features/article/detail_article.dart';
 import 'package:polandesa/common/widgets/cards/article_card.dart';
 import 'package:polandesa/features/article/widgets/category_filter.dart';
 import 'package:polandesa/utils/constants/colors.dart';
-import 'package:polandesa/utils/constants/helpers/hex_color.dart';
 
 class ListArticleScreen extends StatefulWidget {
   const ListArticleScreen({super.key});

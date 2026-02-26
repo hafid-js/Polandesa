@@ -4,7 +4,6 @@ import 'package:get/route_manager.dart';
 import 'package:polandesa/main_screen.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import '../utils/constants/theme/theme.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 
 void main() async {
 
@@ -22,9 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final FlutterLocalization _localization = FlutterLocalization.instance;
-     
-
+    
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
@@ -36,10 +33,6 @@ class MyApp extends StatelessWidget {
         backgroundColor: UColors.primary,
         body: MainScreen()
       ),
-      // localizationsDelegates: _localization.localizationsDelegates,
-      // supportedLocales: [
-      //   Locale('id','ID')
-      // ],
     );
   }
 }

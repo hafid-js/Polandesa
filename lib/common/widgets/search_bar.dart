@@ -17,7 +17,7 @@ class USearchBar extends StatelessWidget {
     child: Row(
       children: [
         Expanded(
-          child: GestureDetector(
+          child: InkWell(
             onTap: () {},
             child: Container(
               height: USizes.searchBarHeight,
@@ -45,7 +45,7 @@ class USearchBar extends StatelessWidget {
 
         SizedBox(width: 10), 
         
-        GestureDetector(
+        InkWell(
           onTap: () {},
           child: Padding(
             padding: const EdgeInsets.only(right: 0),

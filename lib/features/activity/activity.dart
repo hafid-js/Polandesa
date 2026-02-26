@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:polandesa/common/widgets/cards/complaint_card.dart';
 import 'package:polandesa/common/widgets/images/rounded_image.dart';
 import 'package:polandesa/features/article/detail_article.dart';
+import 'package:polandesa/features/complaint/detail_complaint.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 import 'package:polandesa/utils/constants/helpers/hex_color.dart';
 
@@ -48,6 +50,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
       "status": "Selesai",
     },
   ];
+
+  List<bool> savedStates = [];
+
+  @override
+  void initState() {
+    super.initState();
+    savedStates = List.generate(complaints.length, (_) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +179,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       itemCount: 2,
                       itemBuilder: (context, index) => SizedBox(
                         height: 140,
-                        child: GestureDetector(
+                        child: InkWell(
                           onTap: () => Get.to(() => DetailArticleScreen()),
                           child: Card(
                             color: Colors.white,
@@ -416,147 +426,19 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   const SizedBox(height: 16),
                   Expanded(
                     child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
                       itemCount: complaints.length,
                       itemBuilder: (context, index) {
                         final item = complaints[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
-                          child: Card(
-                            color: UColors.white,
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                left: 6,
-                                right: 6,
-                                top: 10,
-                                bottom: 15,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/complaints/aduan.png",
-                                    width: 75,
-                                    height: 75,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  const SizedBox(width: 10),
-
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item["kode"]!,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            color: HexColor.fromHex("#020381"),
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-
-                                        Text(
-                                          item["deskripsi"]!,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: UColors.dark,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-
-                                        Text(
-                                          item["tanggal"]!,
-                                          style: TextStyle(
-                                            color: UColors.darkGrey,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 20),
-
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: 90,
-                                              height: 30,
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        const AlertDialog(
-                                                          title: Text(
-                                                            "Informasi",
-                                                          ),
-                                                          content: Text(
-                                                            "Uji Coba",
-                                                          ),
-                                                        ),
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      item["status"] ==
-                                                          "Disposisi"
-                                                      ? UColors.backgroundColor
-                                                      : item["status"] ==
-                                                            "Progres"
-                                                      ? HexColor.fromHex(
-                                                          "#fcb900",
-                                                        )
-                                                      : item["status"] ==
-                                                            "Selesai"
-                                                      ? HexColor.fromHex(
-                                                          "#E5F9F2",
-                                                        )
-                                                      : item["status"] ==
-                                                            "Verifikasi"
-                                                      ? HexColor.fromHex(
-                                                          "#8ed1fc",
-                                                        )
-                                                      : Colors.grey,
-                                                  foregroundColor:
-                                                      HexColor.fromHex(
-                                                        "#FF4158D0",
-                                                      ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          30,
-                                                        ),
-                                                  ),
-                                                  padding: EdgeInsets.zero,
-                                                ),
-                                                child: Text(
-                                                  item["status"]!,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.bookmark,
-                                              size: 30,
-                                              color: Colors.grey
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        return UComplaintCard(
+                          isBookmarked: savedStates[index],
+                          onBookmarkTap: () {
+                            setState(() {
+                              savedStates[index] = !savedStates[index];
+                            });
+                          },
+                          complaint: item,
+                          onTap: () => Get.to(() => DetailComplaintScreen()),
                         );
                       },
                     ),

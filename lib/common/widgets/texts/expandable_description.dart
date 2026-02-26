@@ -25,7 +25,7 @@ class _ExpandableDescriptionState extends State<ExpandableDescription> {
             context,
           ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
         ),
-        GestureDetector(
+        InkWell(
           onTap: () => setState(() => isExpanded = !isExpanded),
           child: Padding(
             padding: const EdgeInsets.only(top: 4.0),

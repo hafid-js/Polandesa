@@ -5,12 +5,10 @@ import 'package:polandesa/common/widgets/images/circular_image.dart';
 import 'package:polandesa/common/widgets/images/rounded_image.dart';
 import 'package:polandesa/common/widgets/texts/section_heading.dart';
 import 'package:polandesa/features/article/detail_article.dart';
-import 'package:polandesa/features/article/list_article.dart';
 import 'package:polandesa/features/home/data/article.dart';
 import 'package:polandesa/features/home/data/events.dart';
 import 'package:polandesa/features/home/data/menu_categories.dart';
 import 'package:polandesa/features/home/data/menu_items.dart';
-import 'package:polandesa/features/event/event.dart';
 import 'package:polandesa/features/home/widgets/home_article_section.dart';
 import 'package:polandesa/features/home/widgets/home_event_section.dart';
 import 'package:polandesa/features/home/widgets/home_header.dart';
@@ -244,12 +242,7 @@ class HomeScreen extends StatelessWidget {
                     isNetworkImage: false,
                   ),
 
-                  SizedBox(height: 10),
-                  USectionHeading(
-                    title: "Agenda Hari Ini",
-                    buttonTitle: "Lihat Semua",
-                    onPressed: () => Get.to(() => EventScreen()),
-                  ),
+                  SizedBox(height: 40),
                 ],
               ),
             ),
@@ -259,25 +252,12 @@ class HomeScreen extends StatelessWidget {
               onTap: (item) => Get.to(() => DetailEventScreen()),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
-              child: Column(
-                children: [
-                  USectionHeading(
-                    title: "Artikel Terbaru",
-                    buttonTitle: "Lihat Semua",
-                    onPressed: () => Get.to(() => ListArticleScreen()),
-                  ),
-                ],
-              ),
-            ),
+            SizedBox(height: 20,),
 
             HomeArticleSection(
               events: articles,
               onTap: (item) => Get.to(() => DetailArticleScreen()),
             ),
-
-            SizedBox(height: USizes.spaceBtwSections),
 
             Container(
               color: const Color.fromARGB(176, 238, 238, 238),

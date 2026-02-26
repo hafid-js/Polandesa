@@ -27,7 +27,7 @@ class HomeMenuGrid extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         childAspectRatio: 0.9,
         children: menuItems.map((item) {
-          return GestureDetector(
+          return InkWell(
             onTap: () {
               if (item['name'] == 'Aduan') {
                 Get.to(() => ComplaintScreen());
@@ -84,7 +84,7 @@ class HomeMenuGrid extends StatelessWidget {
                                         ) {
                                           return Column(
                                             children: [
-                                              GestureDetector(
+                                              InkWell(
                                                 onTap: () => Get.to(
                                                   () => item["route"](),
                                                 ),
