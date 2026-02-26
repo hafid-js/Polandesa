@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:polandesa/features/complaint/complaint.dart';
 import 'package:polandesa/features/event/event.dart';
+import 'package:polandesa/features/prayer_time/prayer_time.dart';
 import 'package:polandesa/utils/constants/colors.dart';
 
 class HomeMenuGrid extends StatelessWidget {
@@ -33,6 +34,8 @@ class HomeMenuGrid extends StatelessWidget {
                 Get.to(() => ComplaintScreen());
               } else if (item['name'] == 'Event') {
                 Get.to(() => EventScreen());
+              } else if (item['name'] == 'Jadwal Sholat') {
+                Get.to(() => PrayerTimeScreen());
               } else if (item['name'] == 'Semua') {
                 showBarModalBottomSheet(
                   backgroundColor: Colors.white,

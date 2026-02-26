@@ -14,40 +14,39 @@ class UPrimaryHeaderContainer extends StatelessWidget {
   final double height;
 
   @override
-Widget build(BuildContext context) {
-  return ClipRRect(
-    borderRadius: const BorderRadius.only(
-      bottomLeft: Radius.circular(25),
-      bottomRight: Radius.circular(25),
-    ),
-    child: Container(
-      height: height,
-color: const Color.fromRGBO(65, 88, 208, 1),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -150,
-            right: -160,
-            child: UCircularContainer(
-              height: USizes.homePrimaryHeaderHeight,
-              width: USizes.homePrimaryHeaderHeight,
-              backgroundColor: UColors.white.withValues(alpha: 0.1),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            right: -250,
-            child: UCircularContainer(
-              height: USizes.homePrimaryHeaderHeight,
-              width: USizes.homePrimaryHeaderHeight,
-              backgroundColor: UColors.white.withValues(alpha: 0.1),
-            ),
-          ),
-          child,
-        ],
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(25),
+        bottomRight: Radius.circular(25),
       ),
-    ),
-  );
+      child: Container(
+        height: height,
+        color: const Color.fromRGBO(65, 88, 208, 1),
+        child: Stack(
+          children: [
+            Positioned(
+              top: -150,
+              right: -160,
+              child: UCircularContainer(
+                height: USizes.homePrimaryHeaderHeight,
+                width: USizes.homePrimaryHeaderHeight,
+                backgroundColor: UColors.white.withValues(alpha: 0.1),
+              ),
+            ),
+            Positioned(
+              top: 50,
+              right: -250,
+              child: UCircularContainer(
+                height: USizes.homePrimaryHeaderHeight,
+                width: USizes.homePrimaryHeaderHeight,
+                backgroundColor: UColors.white.withValues(alpha: 0.1),
+              ),
+            ),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
 }
-}
-

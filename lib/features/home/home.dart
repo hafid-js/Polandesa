@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UColors.backgroundColor,
-      appBar: AppBar(toolbarHeight: 0),
+      appBar: AppBar(toolbarHeight: -10),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -252,7 +252,7 @@ class HomeScreen extends StatelessWidget {
               onTap: (item) => Get.to(() => DetailEventScreen()),
             ),
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
 
             HomeArticleSection(
               events: articles,
