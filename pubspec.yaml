@@ -55,6 +55,11 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   url_launcher: ^6.3.2
   percent_indicator: ^4.2.5
+  flutter_compass: ^0.8.1
+  permission_handler: ^12.0.1
+  hijri: ^3.0.0
+  http: ^1.6.0
+  hijri_calendar: ^1.0.7+7
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
