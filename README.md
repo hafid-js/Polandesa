@@ -1,5 +1,7 @@
 # Tiruan Aplikasi JNN (Jateng Ngopeni Nglakoni)
 
+Aplikasi ini merupakan replika / tiruan dari platform JNN Jateng Ngopeni Nglakoni yang dikembangkan menggunakan Flutter sebagai bagian dari pembelajaran dan pengembangan portofolio.
+
 
 <img width="447" height="938" alt="Tangkapan Layar 2026-02-27 pukul 10 19 47 PM" src="https://github.com/user-attachments/assets/c73108ac-5891-4ebe-b2ac-2b7a024bedf1" />
 <img width="447" height="938" alt="Tangkapan Layar 2026-02-27 pukul 10 20 00 PM" src="https://github.com/user-attachments/assets/578b2117-4d35-4ac3-a1d9-d3885141cc23" />
